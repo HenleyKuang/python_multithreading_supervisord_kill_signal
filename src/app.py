@@ -18,7 +18,7 @@ def _main():
     exit_flag = threading.Event()
     thread_count = 5
     thread_list = []
-    for thread_id in range(thread_count):
+    for thread_id in range(thread_count)5:
         t = threading.Thread(target=worker, args=(thread_id, exit_flag))
         thread_list.append(t)
         t.start()
