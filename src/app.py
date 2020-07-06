@@ -6,24 +6,22 @@ LOGGER = logging.getLogger(__name__)
 
 
 def _main():
-
-    def worker(thread_id, exit_flag):
-        while True:
-            if exit_flag.is_set():
-                LOGGER.info("[%s] exit_flag set", thread_id)
-                break
-            time.sleep(5)
-            LOGGER.info("[%s] thread alive", thread_id)
-
     exit_flag = threading.Event()
     thread_count = 5
-    thread_list = []
-    for thread_id in range(thread_count)5:
-        t = threading.Thread(target=worker, args=(thread_id, exit_flag))
-        thread_list.append(t)
+
+    def worker(exit_flag):
+        while exit_flag.is_set() is False:
+            LOGGER.info("thread alive")
+            exit_flag.wait(5)
+        LOGGER.info("exit_flag set")
+
+    for _ in range(thread_count):
+        t = threading.Thread(target=worker, args=(exit_flag,))
         t.start()
+
     try:
-        time.sleep(30)
+        while True:
+            exit_flag.wait(60 * 60 * 24)
     except KeyboardInterrupt:
         exit_flag.set()
 
